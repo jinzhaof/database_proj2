@@ -70,7 +70,7 @@ SQL;
     public function update(User $user) {
         $sql =<<<SQL
 UPDATE $this->tableName
-SET uname=?, email=?, city=?
+SET uname=?, email=?, city=?, password = ?
 WHERE username=?
 SQL;
         $pdo = $this->pdo();
@@ -78,7 +78,7 @@ SQL;
 
         try {
             $ret = $statement->execute(array($user->getName(),
-                $user->getEmail(),$user->getCity(),$user->getUsername()));
+                $user->getEmail(),$user->getCity(), $user->getPassword(), $user->getUsername()));
         } catch(\PDOException $e) {
             return false;
         }

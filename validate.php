@@ -12,8 +12,13 @@ if ($user == null){
     exit;
 }
 else{
-    session_start();
+    if(!isset($_SESSION))
+    {
+        session_start();
+    }
     $_SESSION['user'] = $user;
+    header("Location: profile.php");
+    exit;
 }
 
 

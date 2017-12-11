@@ -7,10 +7,7 @@ $username = strip_tags($_POST['username']);
 $password1 = strip_tags($_POST['password1']);
 $password2 = strip_tags($_POST['password2']);
 $name = strip_tags($_POST['name']);
-if(!isset($_SESSION))
-{
-    session_start();
-}
+
 if($users->exists($username)){
     header("Location: signup.php?u");
     exit;
@@ -24,7 +21,11 @@ else if ($username == null || $password1 == null || $password2 == null || $name 
     exit;
 }
 else{
-    $row = array("username" => $username, "password" => $password1, "name" => $name);
+    if(!isset($_SESSION))
+    {
+        session_start();
+    }
+    $row = array("username" => $username, "password" => $password1, "name" => $name, "email" => null, "city"=>null);
     $user = new \project\User($row);
     $users->add($user);
     $_SESSION['user'] = $user;

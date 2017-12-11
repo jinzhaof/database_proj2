@@ -17,9 +17,11 @@ class User
      * @param $row Row from the user table in the database
      */
     public function __construct($row) {
-        $this->username = $row['username'];
-        $this->name = $row['name'];
-        $this->password = $row['password'];
+        $this->username = $row["username"];
+        $this->name = $row["name"];
+        $this->email = $row["email"];
+        $this->city = $row["city"];
+        $this->password = $row["password"];
     }
     /**
      * @return mixed
