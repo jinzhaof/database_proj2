@@ -14,7 +14,27 @@ if(isset($_GET['key'])){
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link href="style.css" type="text/css" rel="stylesheet">
-    <title>Search</title>"
+    <title>Search</title>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("button[name=music]").click(function(){
+                var button = this;
+                var music = new Audio(button.value);
+                music.play();
+                var user = $("#user").val();
+                var tid = button.id;
+                $.post("post/play.php",
+                    {
+                        username:user,
+                        tid:tid
+                    },
+                    function (data) {
+                        console.log(data);
+                    });
+            });
+        });
+    </script>
 </head>
 <body>
 <header><h1>Search</h1></header>
@@ -23,6 +43,7 @@ if(isset($_GET['key'])){
     <form method="POST" action="post/search.php">
         <h2><input type="text" size="37" name="search"><button name='s' type='submit'>Search</button></h2>
         <input type="hidden" value=<?php echo $_GET['key']?> name="key" />
+        <input type="hidden" value=<?php echo $username?> id="user" />
         <?php
         if(isset($_GET["k"])){
             echo "<h2>Please enter the keyword!</h2>";
@@ -64,6 +85,7 @@ if(isset($_GET['key'])){
                 echo "<tr><th>Track Name</th><th>Duration</th><th>Artist</th><th>Album</th><th>Play</th><th>Rate</th></tr>";
                 $album_table = new \project\Albums($site);
                 $rate_table = new \project\Rates($site);
+                $preview_table = new \project\Preview($site);
                 foreach($t_result as $t){
                     echo "<tr>";
                     $title = $t->getTrackName();
@@ -73,14 +95,19 @@ if(isset($_GET['key'])){
                     $id = $t->getAlbum();
                     $album = $album_table->get($id);
                     $albname = $album->getAlbname();
+                    $url = $preview_table->get($tid);
 
 
                     echo "<th>$title</th>";
                     echo "<th>$duration</th>";
-                    echo "<th><a href='artlist.php?name=$artist'>$artist</a></th>";
+                    echo "<th>$artist</th>";
                     echo "<th>$albname</th>";
-                    echo "<th><iframe src=\"https://open.spotify.com/embed?uri=spotify:track:$tid\"
-        frameborder = \"0\" allowtransparency = \"true\" ></iframe ></th>";
+                    if($url){
+                        echo "<th><button name='music' type='button' id='$tid' value='$url'>Play</button></th>";
+                    }
+                    else{
+                        echo "<th>Sorry</th>";
+                    }
                     echo "<th><select name=$tid>";
                     $selected = 0;
                     if($rate_table->exists($username,$tid)){
@@ -113,7 +140,7 @@ if(isset($_GET['key'])){
                     echo "<tr>";
                     $name = $a->getAname();
                     $description = $a->getDescription();
-                    echo "<th><a href='artlist.php?name=$name'>$name</a></th>";
+                    echo "<th>$name</th>";
                     echo "<th>$description</th>";
                     if($love_table->exists($username,$name)){
                         echo "<th><button name='unlike' type='submit' value=$name>Unlike</button></th>";
@@ -125,6 +152,7 @@ if(isset($_GET['key'])){
                 }
                 echo "</table>";
             }
+
         }
 
         ?>

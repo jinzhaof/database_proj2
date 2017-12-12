@@ -80,11 +80,38 @@ $username = $user->getUsername()?>
                     array_push($followed_playlist,$l);
                 }
             }
+            echo "<table  align='center' style='width:50%'>";
+            echo "<tr><th>Title</th><th>Creator</th></tr>";
             foreach($followed_playlist as $fp){
                 $ptitle = $fp->getPtitle();
                 $pid = $fp->getPid();
-                echo "<h3><a href=\"playlist.php?id=$pid\">$ptitle</a></h3>";
+                $creator = $fp->getUser();
+                echo "<tr>";
+                echo "<th><a href=\"playlist.php?id=$pid\">$ptitle</a></th>";
+                echo "<th>$creator</th>";
+                echo "</tr>";
             }
+            echo "</table>";
+        }
+        else{
+            echo "<h3>You don't follow anyone</h3>";
+        }
+        ?>
+
+        <h2>Artists That Your Like:</h2>
+        <?php
+        $love_table = new \project\Love($site);
+        $loves = $love_table->get($username);
+        if(count($loves)){
+            echo "<table  align='center'>";
+            echo "<tr><th>Artist</th></tr>";
+            foreach($loves as $l){
+                echo "<tr><th><a href='artlist.php?name=$l'>$l</a></th></tr>";
+            }
+            echo "</table>";
+        }
+        else{
+            echo "<h3>You don't like any artists</h3>";
         }
 
         ?>

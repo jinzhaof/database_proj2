@@ -10,6 +10,26 @@ $username = $_SESSION['user']->getUsername();?>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link href="style.css" type="text/css" rel="stylesheet">
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("button[name=music]").click(function(){
+                var button = this;
+                var music = new Audio(button.value);
+                music.play();
+                var user = $("#user").val();
+                var tid = button.id;
+                $.post("post/play.php",
+                    {
+                        username:user,
+                        tid:tid
+                    },
+                    function (data) {
+                        console.log(data);
+                    });
+            });
+        });
+    </script>
     <?php $ptitle = $playlist->getPtitle(); echo "<title>$ptitle</title>";?>
 </head>
 <body>
@@ -18,6 +38,7 @@ $username = $_SESSION['user']->getUsername();?>
     <h2><a href="index.php">Log Out</a>       <a href="profile.php">My Profile</a></h2>
     <form method="POST" action="post/manage.php">
         <input type="hidden" value=<?php echo $_GET['id']?> name="pid" />
+        <input type="hidden" value=<?php echo $username?> id="user" />
         <h2><input type="text" size="37" name="search"><button name='s' type='submit'>Add</button></h2>
         <?php
         $releasedate = $playlist->getReleasedate();
@@ -28,6 +49,7 @@ $username = $_SESSION['user']->getUsername();?>
         echo "<tr><th>Title</th><th>Duration</th><th>Artist</th><th>Album</th><th>Play</th><th>Rate</th><th>Delete</th></tr>";
 
         $include_table = new \project\Includes($site);
+        $preview_table = new \project\Preview($site);
         $tracks = $include_table->get($_GET['id']);
         $album_table = new \project\Albums($site);
         $rate_table = new \project\Rates($site);
@@ -40,15 +62,19 @@ $username = $_SESSION['user']->getUsername();?>
                 $artist = $t->getArtist();
                 $id = $t->getAlbum();
                 $album = $album_table->get($id);
-
+                $url = $preview_table->get($tid);
                 $albname = $album->getAlbname();
 
                 echo "<th>$title</th>";
                 echo "<th>$duration</th>";
                 echo "<th><a href='artlist.php?name=$artist'>$artist</a></th>";
                 echo "<th>$albname</th>";
-                echo "<th><iframe src=\"https://open.spotify.com/embed?uri=spotify:track:$tid\"
-        frameborder=\"0\" allowtransparency=\"true\"></iframe></th>";
+                if($url){
+                    echo "<th><button name='music' type='button' id='$tid' value='$url'>Play</button></th>";
+                }
+                else{
+                    echo "<th>Sorry</th>";
+                }
                 echo "<th><select name=$tid>";
                 $selected = 0;
                 if($rate_table->exists($username,$tid)){
