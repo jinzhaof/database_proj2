@@ -15,7 +15,7 @@
 <body>
 <header><h1>Register Your New Account</h1></header>
 <article>
-    <form method="POST" action="signupvalidate.php">
+    <form method="POST" action="post/signup.php">
         <?php
         if(isset($_GET["m"])){
             echo "<h2>Please fill all information</h2>";
@@ -27,10 +27,12 @@
             echo "<h2>Username Already Exists!</h2>";
         }
         ?>
-        <h2>Enter an username: <input type="text" size="38" name="username"></h2>
-        <h2>Enter your name: <input type="text" size="38" name="name"></h2>
-        <h2>Enter your password: <input type="password" size="37" name="password1"></h2>
-        <h2>Re-Enter your password: <input type="password" size="36" name="password2"></h2>
+        <table align='center'>
+            <tr><th align="left">Enter an username:</th><th><input type="text" size="45" name="username"></th></tr>
+            <tr><th align="left">Enter your name: </th><th><input type="text" size="45" name="name"></th></tr>
+            <tr><th align="left">Enter your password:  </th><th><input type="text" size="45" name="password1"></th></tr>
+            <tr><th align="left">Re-Enter your password:  </th><th><input type="text" size="45" name="password2"></th></tr>
+        </table>
         <h3><a href="index.php">Already have an account? Sing In!</a></h3>
         <h2><input type="submit" value="Submit"> <input type="reset"></h2>
 

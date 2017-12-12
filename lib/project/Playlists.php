@@ -71,20 +71,23 @@ SQL;
         return $lists;
     }
 
-    public function add(Playlist $playlist) {
-        // Ensure we have no duplicate email address
-        if($this->exists($playlist->getPid())) {
-            return "Playlist already exists.";
-        }
+    public function add($title,$rtime,$username) {
         // Add a record to the user table
         $sql = <<<SQL
-INSERT INTO $this->tableName(pid, ptitle, releasedate,username)
-values(?, ?, ?, ?)
+INSERT INTO $this->tableName(ptitle, releasedate,username)
+values(?, ?, ?)
 SQL;
 
         $statement = $this->pdo()->prepare($sql);
-        $statement->execute(array(
-            $playlist->getPid(), $playlist->getPtitle(), $playlist->getReleasedate()),$playlist->getUser());
+        try {
+            if($statement->execute(array($title,$rtime,$username)) === false) {
+                return null;
+            }
+        } catch(\PDOException $e) {
+            return null;
+        }
+
+        return $this->pdo()->lastInsertId();
     }
 
     public function exists($pid) {
@@ -100,5 +103,18 @@ SQL;
         }
         return true;
 
+    }
+    public function delete($id){
+        $sql = <<<SQL
+DELETE FROM $this->tableName
+WHERE pid = ?
+SQL;
+        $pdo = $this->pdo();
+        $statement = $pdo->prepare($sql);
+        $statement->execute(array($id));
+        if($this->exists($id)){
+            return false;
+        }
+        return true;
     }
 }

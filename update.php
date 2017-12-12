@@ -1,42 +1,39 @@
 <?php
 require 'lib/site.inc.php';
-$users = new project\Users($site);
+$username = $user->getUsername()?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link href="style.css" type="text/css" rel="stylesheet">
+    <title>Update Profile</title>
+</head>
+<body>
 
-$username = strip_tags($_POST['username']);
-$password = strip_tags($_POST['password']);
-$name = strip_tags($_POST['name']);
-$city = strip_tags($_POST['city']);
-$email = strip_tags($_POST['email']);
-$row = array();
+<header><h1>Update Profile</h1></header>
+<article>
+    <h2><a href="index.php">Log Out</a>    <a href="profile.php">Back to Homepage</a></h2>
+    <form method="POST" action="post/update.php">
+        <input type="hidden" value="<?php echo $username;?>" name="username" />
+        <?php
+        if(isset($_GET["m"])){
+            echo "<h2>Name or Password can't be null!</h2>";
+        }
+        echo "<h2>$username, Update Your Information:</h2>";
+        $name = $user->getName();
+        $email = $user->getEmail();
+        $city = $user->getCity();
+        $password = $user->getPassword();
+        echo "<table align='center'>";
+        echo "<tr><th>Full Name:</th><th><input type=\"text\" size=\"37\" name=\"name\" value=\"$name\"></th></tr>";
+        echo "<tr><th>Email:</th><th><input type=\"text\" size=\"37\" name=\"email\" value=\"$email\"></th></tr>";
+        echo "<tr><th>City:</th><th><input type=\"text\" size=\"37\" name=\"city\" value=\"$city\"></th></tr>";
+        echo "<tr><th>Password:</th><th><input type=\"password\" size=\"37\" name=\"password\" value=\"$password\"></th></tr>";
+        echo "</table>";
+        echo "<h2><button name='update' type='submit'>Update</button> <input type=\"reset\"> <button name='update' type='submit'>Cancel</button></h2>";
+        ?>
 
-if(isset($_POST['s'])){
-    $keyword = strip_tags($_POST['search']);
-    if($keyword != null){
-        header("Location: search.php?key=$keyword");
-        exit;
-    }
-    else{
-        header("Location: profile.php?k");
-        exit;
-    }
-}
-
-
-else if ($password == null || $name == null){
-    header("Location: profile.php?m");
-    exit;
-}
-else{
-    $row = array("username" => $username, "password" => $password, "name" => $name, "email" => $email, "city"=>$city);
-    if(!isset($_SESSION))
-    {
-        session_start();
-    }
-    $user = new project\User($row);
-    $result = $users->update($user);
-    if($result){
-        $_SESSION['user'] = $user;
-        header("Location: profile.php");
-        exit;
-    }
-}
+    </form>
+</article>
+</body>
+</html>

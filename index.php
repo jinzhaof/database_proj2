@@ -1,6 +1,7 @@
 <?php
 $open = true;
-require 'lib/site.inc.php';?>
+require 'lib/site.inc.php';
+unset($_SESSION['user']);?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,7 +12,7 @@ require 'lib/site.inc.php';?>
 <body>
 <header><h1>Log Into Your Account</h1></header>
 <article>
-    <form method="POST" action="validate.php">
+    <form method="POST" action="post/index.php">
         <?php
         if(isset($_GET['e'])){
             echo "<h2>username and password do not match</h2>";

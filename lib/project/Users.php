@@ -30,7 +30,6 @@ SQL;
 
         $statement->execute(array($username,$password));
         if($statement->rowCount() === 0) {
-            echo "no";
             return null;
         }
 

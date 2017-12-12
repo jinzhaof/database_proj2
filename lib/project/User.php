@@ -18,7 +18,7 @@ class User
      */
     public function __construct($row) {
         $this->username = $row["username"];
-        $this->name = $row["name"];
+        $this->uname = $row["uname"];
         $this->email = $row["email"];
         $this->city = $row["city"];
         $this->password = $row["password"];
@@ -39,14 +39,6 @@ class User
         return $this->email;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
 
 
     /**
@@ -56,6 +48,13 @@ class User
     {
         return $this->city;
     }
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->uname;
+    } 		///< Name as last, first
 
 
     /**
@@ -102,7 +101,7 @@ class User
 
     private $username;		///< The internal ID for the user
     private $email;		///< Email address
-    private $name; 		///< Name as last, first
+    private $uname;
     private $city;
     private $password;
 }

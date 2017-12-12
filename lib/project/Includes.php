@@ -36,4 +36,81 @@ SQL;
         return $result;
     }
 
+    public function add($pid, $tid) {
+        // Add a record to the user table
+        $sql = <<<SQL
+INSERT INTO $this->tableName(PlaylistId, TrackId)
+values(?, ?)
+SQL;
+
+        $statement = $this->pdo()->prepare($sql);
+        $statement->execute(array($pid, $tid));
+        if($this->exists($pid, $tid)){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+
+    }
+
+    public function exists($pid, $tid) {
+        $sql = <<<SQL
+SELECT * from $this->tableName where PlaylistId = ? and TrackId = ?
+SQL;
+        $pdo = $this->pdo();
+        $statement = $pdo->prepare($sql);
+
+        $statement->execute(array($pid, $tid));
+        if($statement->rowCount() === 0) {
+            return false;
+        }
+        return true;
+
+    }
+
+    public function existsPlaylist($pid) {
+        $sql = <<<SQL
+SELECT * from $this->tableName where PlaylistId = ?
+SQL;
+        $pdo = $this->pdo();
+        $statement = $pdo->prepare($sql);
+
+        $statement->execute(array($pid));
+        if($statement->rowCount() === 0) {
+            return false;
+        }
+        return true;
+
+    }
+
+    public function delete($pid, $tid){
+        $sql = <<<SQL
+DELETE FROM $this->tableName
+WHERE PlaylistId = ? and TrackId = ?
+SQL;
+        $pdo = $this->pdo();
+        $statement = $pdo->prepare($sql);
+        $statement->execute(array($pid, $tid));
+        if($this->exists($pid, $tid)){
+            return false;
+        }
+        return true;
+    }
+
+    public function deletePlaylist($pid){
+        $sql = <<<SQL
+DELETE FROM $this->tableName
+WHERE PlaylistId = ?
+SQL;
+        $pdo = $this->pdo();
+        $statement = $pdo->prepare($sql);
+        $statement->execute(array($pid));
+        if($this->existsPlaylist($pid)){
+            return false;
+        }
+        return true;
+    }
+
 }

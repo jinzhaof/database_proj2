@@ -69,4 +69,24 @@ SQL;
         return $lists;
     }
 
+    public function addSearch($keyword) {
+
+        $lists = array();
+        $sql =<<<SQL
+SELECT DISTINCT * from $this->tableName
+where TrackName like ? or TrackArtist like ? order by TrackName
+SQL;
+        $pdo = $this->pdo();
+        $statement = $pdo->prepare($sql);
+
+        $statement->execute(array($keyword, $keyword));
+        if($statement->rowCount() === 0) {
+            return null;
+        }
+        while($row = $statement->fetch(\PDO::FETCH_ASSOC)){
+            array_push($lists,new Track($row));
+        }
+        return $lists;
+    }
+
 }

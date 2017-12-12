@@ -18,10 +18,7 @@ header{
     margin: 0 5em 0 5em;
     padding: 0.5em;
 }
-nav{
-    text-align: right;
-    font-family: "Times New Roman", Times, serif;
-}
+
 h1{
     padding-top: 0.3em;
     font-size: 3.2em;
@@ -71,10 +68,4 @@ h3{
     font-size: 1.5em;
     font-family: "Arial", Arial, sans-serif;
     font-weight: 100;
-}
-nav a:link{
-    color: white;
-}
-nav a:visited{
-    color: white;
 }

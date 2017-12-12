@@ -15,7 +15,8 @@ if(isset($_GET['name'])){
 <body>
 <header><?php echo "<h1>$name</h1>";?></header>
 <article>
-    <form method="POST" action="back.php">
+    <h2><a href="index.php">Log Out</a>       <a href="profile.php">My Profile</a></h2>
+    <form method="POST" action="post/artlist.php">
         <input type="hidden" value=<?php echo $_GET['name']?> name="aname" />
     <?php
     $description = $artist->getDescription();
