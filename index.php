@@ -17,6 +17,9 @@ unset($_SESSION['user']);?>
         if(isset($_GET['e'])){
             echo "<h2>username and password do not match</h2>";
         }
+        else if(isset($_GET['l'])){
+            echo "<h2>You have been logged out</h2>";
+        }
         ?>
         <h2>username: <input type="text" size="38" name="username"></h2>
         <h2>password: <input type="password" size="37" name="password"></h2>

@@ -40,7 +40,7 @@ if(isset($_GET['id'])){
 <body>
 <header><h1>Search</h1></header>
 <article>
-    <h2><a href="index.php">Log Out</a>       <a href="profile.php">My Profile</a> <a href="<?php echo "manage.php?id=".$pid?>">Manage</a></h2>
+    <h2><a href="index.php?l">Log Out</a>       <a href="profile.php">My Profile</a> <a href="<?php echo "manage.php?id=".$pid?>">Manage</a></h2>
     <form method="POST" action="post/addtrack.php">
         <input type="hidden" value=<?php echo $pid?> name="pid" />
         <input type="hidden" value=<?php echo $_GET['key']?> name="key"/>

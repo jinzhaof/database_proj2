@@ -39,7 +39,7 @@ if(isset($_GET['key'])){
 <body>
 <header><h1>Search</h1></header>
 <article>
-    <h2><a href="index.php">Log Out</a>       <a href="profile.php">My Profile</a></h2>
+    <h2><a href="index.php?l">Log Out</a>       <a href="profile.php">My Profile</a></h2>
     <form method="POST" action="post/search.php">
         <h2><input type="text" size="37" name="search"><button name='s' type='submit'>Search</button></h2>
         <input type="hidden" value=<?php echo $_GET['key']?> name="key" />
@@ -86,12 +86,14 @@ if(isset($_GET['key'])){
                 $album_table = new \project\Albums($site);
                 $rate_table = new \project\Rates($site);
                 $preview_table = new \project\Preview($site);
+                @$artist_table = new \project\Artists($site);
                 foreach($t_result as $t){
                     echo "<tr>";
                     $title = $t->getTrackName();
                     $tid = $t->getTrackId();
                     $duration = $t->getDuration();
                     $artist = $t->getArtist();
+                    $aid = $artist_table->getId($artist);
                     $id = $t->getAlbum();
                     $album = $album_table->get($id);
                     $albname = $album->getAlbname();
@@ -100,7 +102,7 @@ if(isset($_GET['key'])){
 
                     echo "<th>$title</th>";
                     echo "<th>$duration</th>";
-                    echo "<th>$artist</th>";
+                    echo "<th><a href='artlist.php?id=$aid'>$artist</a></th>";
                     echo "<th>$albname</th>";
                     if($url){
                         echo "<th><button name='music' type='button' id='$tid' value='$url'>Play</button></th>";
@@ -139,14 +141,15 @@ if(isset($_GET['key'])){
                 foreach($a_result as $a){
                     echo "<tr>";
                     $name = $a->getAname();
+                    $aid = $a->getArtistId();
                     $description = $a->getDescription();
-                    echo "<th>$name</th>";
+                    echo "<th><a href='artlist.php?id=$aid'>$name</a></th>";
                     echo "<th>$description</th>";
-                    if($love_table->exists($username,$name)){
-                        echo "<th><button name='unlike' type='submit' value=$name>Unlike</button></th>";
+                    if($love_table->exists($username,$aid)){
+                        echo "<th><button name='unlike' type='submit' value=$aid>Unlike</button></th>";
                     }
                     else{
-                        echo "<th><button name='like' type='submit' value=$name>Like</button></th>";
+                        echo "<th><button name='like' type='submit' value=$aid>Like</button></th>";
                     }
                     echo "</tr>";
                 }

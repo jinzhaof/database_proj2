@@ -7,14 +7,35 @@ $username = $user->getUsername()?>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link href="style.css" type="text/css" rel="stylesheet">
     <title>My Profile</title>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("button[name=music]").click(function(){
+                var button = this;
+                var music = new Audio(button.value);
+                music.play();
+                var user = $("#user").val();
+                var tid = button.id;
+                $.post("post/play.php",
+                    {
+                        username:user,
+                        tid:tid
+                    },
+                    function (data) {
+                        console.log(data);
+                    });
+            });
+        });
+    </script>
 </head>
 <body>
 
 <header><h1>My Profile</h1></header>
 <article>
-    <h2><a href="index.php">Log Out</a></h2>
+    <h2><a href="index.php?l">Log Out</a></h2>
     <form method="POST" action="post/profile.php">
         <input type="hidden" value="<?php echo $user->getUsername();?>" name="username" />
+        <input type="hidden" value=<?php echo $username?> id="user" />
         <h2><input type="text" size="37" name="search"><button name='s' type='submit'>Search</button></h2>
         <?php
         if(isset($_GET["m"])){
@@ -24,12 +45,6 @@ $username = $user->getUsername()?>
             echo "<h2>Please enter the keyword!</h2>";
         }
         ?>
-<!--        <h2>username: --><?php //echo $user->getUsername()?><!--</h2>-->
-<!--        <h2>Name: <input type="text" size="37" name="name" value="--><?php //echo $user->getName();?><!--"</h2>-->
-<!--        <h2>Password: <input type="password" size="37" name="password" value="--><?php //echo $user->getPassword();?><!--"</h2>-->
-<!--            <h2>Email: <input type="text" size="37" name="email" value="--><?php //echo $user->getEmail();?><!--"</h2>-->
-<!--                <h2>City: <input type="text" size="37" name="city" value="--><?php //echo $user->getCity();?><!--"</h2>-->
-<!--        <h2><input type="submit" value="Update"> <input type="reset"></h2>-->
 
     <div>
         <h2>Personal Information:</h2>
@@ -102,16 +117,57 @@ $username = $user->getUsername()?>
         <?php
         $love_table = new \project\Love($site);
         $loves = $love_table->get($username);
+        $artist_table = new \project\Artists($site);
         if(count($loves)){
             echo "<table  align='center'>";
             echo "<tr><th>Artist</th></tr>";
             foreach($loves as $l){
-                echo "<tr><th><a href='artlist.php?name=$l'>$l</a></th></tr>";
+                $aname = $artist_table->get($l)->getAname();
+                echo "<tr><th><a href='artlist.php?id=$l'>$aname</a></th></tr>";
             }
             echo "</table>";
         }
         else{
             echo "<h3>You don't like any artists</h3>";
+        }
+        ?>
+        <h2>Recent Release Track From The Artists You Like:</h2>
+        <?php
+        $tracks = $love_table->getRecent($username);
+        $track_table = new \project\Tracks($site);
+        $preview_table = new \project\Preview($site);
+        $album_table = new \project\Albums($site);
+        if(count($tracks)){
+            echo "<table style='width:100%'>";
+            echo "<tr><th>Title</th><th>Duration</th><th>Artist</th><th>Album</th><th>Play</th></tr>";
+            foreach($tracks as $track){
+                $t = $track_table->get($track);
+                echo "<tr>";
+                $title = $t->getTrackName();
+                $tid = $t->getTrackId();
+                $duration = $t->getDuration();
+                $artist = $t->getArtist();
+                $albid = $t->getAlbum();
+                $album = $album_table->get($albid);
+                $albname = $album->getAlbname();
+                $url = $preview_table->get($tid);
+
+                echo "<th>$title</th>";
+                echo "<th>$duration</th>";
+                echo "<th>$artist</th>";
+                echo "<th>$albname</th>";
+                if($url){
+                    echo "<th><button name='music' type='button' id='$tid' value='$url'>Play</button></th>";
+                }
+                else{
+                    echo "<th>Sorry</th>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
+        else{
+            echo "<h3>Nothing New From Your Favorite Artists</h3>";
         }
 
         ?>

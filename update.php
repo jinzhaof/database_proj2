@@ -12,7 +12,7 @@ $username = $user->getUsername()?>
 
 <header><h1>Update Profile</h1></header>
 <article>
-    <h2><a href="index.php">Log Out</a>    <a href="profile.php">Back to Homepage</a></h2>
+    <h2><a href="index.php?l">Log Out</a>    <a href="profile.php">Back to Homepage</a></h2>
     <form method="POST" action="post/update.php">
         <input type="hidden" value="<?php echo $username;?>" name="username" />
         <?php

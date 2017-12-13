@@ -36,7 +36,7 @@ $username = $_SESSION['user']->getUsername();?>
 <body>
 <header><?php echo "<h1>$ptitle</h1>";?></header>
 <article>
-    <h2><a href="index.php">Log Out</a>       <a href="profile.php">My Profile</a></h2>
+    <h2><a href="index.php?l">Log Out</a>       <a href="profile.php">My Profile</a></h2>
     <form method="POST" action="post/playlist.php">
         <input type="hidden" value=<?php echo $_GET['id']?> name="pid" />
         <input type="hidden" value=<?php echo $username?> id="user" />
@@ -54,6 +54,7 @@ $username = $_SESSION['user']->getUsername();?>
     $tracks = $include_table->get($_GET['id']);
     $album_table = new \project\Albums($site);
     $rate_table = new \project\Rates($site);
+    $artist_table = new \project\Artists($site);
     if(count($tracks)){
         foreach($tracks as $t){
             echo "<tr>";
@@ -61,6 +62,7 @@ $username = $_SESSION['user']->getUsername();?>
             $tid = $t->getTrackId();
             $duration = $t->getDuration();
             $artist = $t->getArtist();
+            $aid = $artist_table->getId($artist);
             $id = $t->getAlbum();
             $album = $album_table->get($id);
             $url = $preview_table->get($tid);
@@ -68,7 +70,7 @@ $username = $_SESSION['user']->getUsername();?>
 
             echo "<th>$title</th>";
             echo "<th>$duration</th>";
-            echo "<th><a href='artlist.php?name=$artist'>$artist</a></th>";
+            echo "<th><a href='artlist.php?id=$aid'>$artist</a></th>";
             echo "<th>$albname</th>";
             if($url){
                 echo "<th><button name='music' type='button' id='$tid' value='$url'>Play</button></th>";

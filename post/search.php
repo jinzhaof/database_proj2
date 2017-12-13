@@ -5,7 +5,10 @@ $love_table = new \project\Love($site);
 $user = $_SESSION['user'];
 $username = $user->getUsername();
 $rtime = date("Y-m-d H:i:s");
-$keyword = $_POST['key'];
+if(isset($_POST['key'])){
+    $keyword = $_POST['key'];
+}
+
 
 if(isset($_POST['s'])){
     $key = strip_tags($_POST['search']);
@@ -44,14 +47,14 @@ else if(isset($_POST['unlike'])){
 
 else if(isset($_POST['follow'])){
     if($follow_table->add($username,$_POST['follow'],$rtime)){
-        header("Location: search.php?key=$keyword");
+        header("Location: ../search.php?key=$keyword");
         exit;
     }
 
 }
 else if(isset($_POST['unfollow'])){
     if($follow_table->delete($username,$_POST['unfollow'])){
-        header("Location: search.php?key=$keyword");
+        header("Location: ../search.php?key=$keyword");
         exit;
     }
 }

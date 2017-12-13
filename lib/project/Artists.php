@@ -19,7 +19,23 @@ class Artists extends Table
         parent::__construct($site, "artist");
     }
 
-    public function get($name) {
+    public function get($id) {
+        $sql =<<<SQL
+SELECT * from $this->tableName
+where ArtistId=?
+SQL;
+        $pdo = $this->pdo();
+        $statement = $pdo->prepare($sql);
+
+        $statement->execute(array($id));
+        if($statement->rowCount() === 0) {
+            return null;
+        }
+
+        return new \project\Artist($statement->fetch(\PDO::FETCH_ASSOC));
+    }
+
+    public function getId($name) {
         $sql =<<<SQL
 SELECT * from $this->tableName
 where ArtistTitle=?
@@ -31,9 +47,11 @@ SQL;
         if($statement->rowCount() === 0) {
             return null;
         }
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
 
-        return new \project\Artist($statement->fetch(\PDO::FETCH_ASSOC));
+        return $row['ArtistId'];
     }
+
     public function search($keyword) {
 
         $lists = array();
